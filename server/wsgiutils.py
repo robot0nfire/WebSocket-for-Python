@@ -61,7 +61,8 @@ logger = logging.getLogger('ws4py')
 __all__ = ['WebSocketWSGIApplication']
 
 class WebSocketWSGIApplication(object):
-    def __init__(self, protocols=None, extensions=None, handler_cls=WebSocket):
+    def __init__(self, protocols=None, extensions=None,
+        handler_cls=WebSocket, handler_args={}):
         """
         WSGI application usable to complete the upgrade handshake
         by validating the requested protocols and extensions as
@@ -75,6 +76,7 @@ class WebSocketWSGIApplication(object):
         self.protocols = protocols
         self.extensions = extensions
         self.handler_cls = handler_cls
+        self.handler_args = handler_args
 
     def make_websocket(self, sock, protocols, extensions, environ):
         """
@@ -87,6 +89,7 @@ class WebSocketWSGIApplication(object):
         """
         websocket = self.handler_cls(sock, protocols, extensions,
                                      environ.copy())
+        self.handler_cls.setup(**self.handler_args)
         environ['ws4py.websocket'] = websocket
         return websocket
 
