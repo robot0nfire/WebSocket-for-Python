@@ -89,7 +89,7 @@ class WebSocketWSGIApplication(object):
         """
         websocket = self.handler_cls(sock, protocols, extensions,
                                      environ.copy())
-        self.handler_cls.setup(**self.handler_args)
+        websocket.setup(**self.handler_args)
         environ['ws4py.websocket'] = websocket
         return websocket
 
